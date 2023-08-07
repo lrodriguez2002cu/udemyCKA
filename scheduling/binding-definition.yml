@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Binding
+metadata:
+   name: nginx
+target:
+  apiVersion: v1
+  kind: Node
+  name: node01
+
+# curl -X POST -d '{"key": "value", "another_key": "another_value"}' https://example.com/api/endpoint  
+# curl -X POST -d @data.json https://example.com/api/endpoint
+# https://controlplane:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+# https://controlplane:6443/api/v1/namespaces/default/pods/nginx/binding
