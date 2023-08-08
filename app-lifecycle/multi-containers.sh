@@ -1,0 +1,1 @@
+kubectl exec app  -n elastic-stack -- cat /log/app.log

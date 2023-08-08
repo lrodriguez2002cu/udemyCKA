@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2023-08-07T10:28:32Z"
+  name: elephant
+  namespace: default
+  resourceVersion: "929"
+  uid: 3d7a3fc0-7bda-4ba0-9fbb-078566aa9e53
+spec:
+  containers:
+  - args:
+    - --vm
+    - "1"
+    - --vm-bytes
+    - 15M
+    - --vm-hang
+    - "1"
+    command:
+    - stress
+    image: polinux/stress
+    imagePullPolicy: Always
+    name: mem-stress
+    resources:
+      limits:
+        memory: 20Mi
+      requests:
+        memory: 5Mi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-rqxw4
+      readOnly: true
+ 

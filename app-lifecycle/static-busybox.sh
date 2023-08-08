@@ -1,0 +1,1 @@
+kubectl run static-busybox --image=busybox --dry-run=client -o yaml >  /etc/kubernetes/manifests/busy-box.yaml  
