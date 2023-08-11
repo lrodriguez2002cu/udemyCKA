@@ -1,0 +1,151 @@
+
+# Volume Name: pv-log
+# 
+# Storage: 100Mi
+# 
+# Access Modes: ReadWriteMany
+# 
+# Host Path: /pv/log
+# 
+# Reclaim Policy: Retain
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-log
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  hostPath:
+    path: /pv/log
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+
+
+# Volume Name: claim-log-1
+# 
+# Storage Request: 50Mi
+# 
+# Access Modes: ReadWriteOnce
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-log-1
+spec:
+  resources:
+    requests:
+      storage: 50Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+
+
+# log pod
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2023-08-10T11:55:36Z"
+  name: webapp
+  namespace: default
+  resourceVersion: "1685"
+  uid: bd1b9bb2-7fb4-4f54-9142-256b0ef3a951
+spec:
+  containers:
+  - env:
+    - name: LOG_HANDLERS
+      value: file
+    image: kodekloud/event-simulator
+    imagePullPolicy: Always
+    name: event-simulator
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-85zld
+      readOnly: true
+    - mountPath: /log
+      name: log-volume
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: controlplane
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-85zld
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+  - persistentVolumeClaim:
+      claimName: claim-log-1
+    name: log-volume
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2023-08-10T11:55:36Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2023-08-10T11:55:38Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2023-08-10T11:55:38Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2023-08-10T11:55:36Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://537a28b78f4523044240ef8a0466a2cb7cdf38c3ad6934239091a625ab48af9e
+    image: docker.io/kodekloud/event-simulator:latest
+    imageID: docker.io/kodekloud/event-simulator@sha256:1e3e9c72136bbc76c96dd98f29c04f298c3ae241c7d44e2bf70bcc209b030bf9
+    lastState: {}
+    name: event-simulator
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2023-08-10T11:55:37Z"
+  hostIP: 192.21.244.8
+  phase: Running
+  podIP: 10.244.0.6
+  podIPs:
+  - ip: 10.244.0.6
+  qosClass: BestEffort
+  startTime: "2023-08-10T11:55:36Z"

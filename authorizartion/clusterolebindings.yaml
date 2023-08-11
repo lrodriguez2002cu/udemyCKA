@@ -1,0 +1,20 @@
+
+k create clusterrole onlynodes --verb=list --verb=get,watch,list,create,delete -o yaml --resource=nodes
+k create clusterrolebinding  onlynodes-binding --clusterrole=onlynodes  --user=michelle 
+
+
+
+ClusterRole: storage-admin
+
+Resource: persistentvolumes
+
+Resource: storageclasses
+
+ClusterRoleBinding: michelle-storage-admin
+
+ClusterRoleBinding Subject: michelle
+
+ClusterRoleBinding Role: storage-admin
+
+k create clusterrole storage-admin --verb=list --verb=create,delete,deletecollection,get,list,patch,update,watch -o yaml --resource=storageclasses --resource=persistentvolumes --dry-run=client 
+k create clusterrolebinding  michelle-storage-admin --clusterrole=storage-admin  --user=michelle --dry-run=client 
