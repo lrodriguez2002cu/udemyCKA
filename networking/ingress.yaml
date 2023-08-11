@@ -1,0 +1,41 @@
+   k get ingress
+   k get ingress --all-namespaces
+   k get ingress-controller --all-namespaces
+   k get po
+   k get po --all-namespaces
+   k get deploy
+   k get deploy --all-namespaces
+   k get ingress --all-namespaces 
+   k describe ingress ingress-wear-watch -n app-space
+    k edit ingress ingress-wear-watchc -n app-space
+    k edit ingress ingress-wear-watch -n app-space
+    k get deploy -n app-space
+    k edit ingress ingress-wear-watch -n app-space
+    k get deploy --all-namespaces
+    k get svc --all-namespace
+    k get svc --all-namespaces
+    k edit ingress ingress-wear-watch -n app-space
+    vi pay-ingress.yaml
+    k create -f pay-ingress.yaml 
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ingress
+  namespace: critical-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pay
+        pathType: Prefix
+        backend:
+          service:
+           name: pay-service
+           port:
+            number: 8282
